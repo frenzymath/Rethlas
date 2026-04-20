@@ -14,24 +14,26 @@ Read:
 
 - one decomposition plan from `subgoals`
 - relevant `immediate_conclusions`, `toy_examples`, `counterexamples`, and `failed_paths`
+- the latest relevant `big_decisions`, especially the preflight record for the plan goal
 - relevant search results and references
 - any previously identified external statements whose proofs may be adaptable
 
 ## Procedure
 
-1. Take one decomposition plan at a time.
-2. For each subgoal, actively use the searched results, toy examples, and counterexamples that are most relevant to that subgoal.
-3. When a similar theorem has been found, try to adapt its proof idea, construction, or reduction to the current subgoal instead of treating it as a black-box citation.
-4. First attempt to prove all subgoals in that plan directly.
-5. Try to carry the whole plan through before switching into failure diagnosis mode.
-6. For each subgoal, record whether it is:
+1. Confirm that the active plan goal is covered by a preflight record with `gate_status="pass"`. If not, do not attempt to prove the plan as if its target were settled; append a blocking record and stop this skill.
+2. Take one decomposition plan at a time.
+3. For each subgoal, actively use the searched results, toy examples, and counterexamples that are most relevant to that subgoal.
+4. When a similar theorem has been found, try to adapt its proof idea, construction, or reduction to the current subgoal instead of treating it as a black-box citation.
+5. First attempt to prove all subgoals in that plan directly.
+6. Try to carry the whole plan through before switching into failure diagnosis mode.
+7. For each subgoal, record whether it is:
    - already solved directly
    - partially advanced
    - blocked
-7. If a proof adaptation attempt fails, identify why the migration fails. Be concrete: for example, note which hypothesis is missing, which construction does not transfer, which step breaks, which counterexample blocks the migration, or which part of the searched proof depends on structure absent in the current setting.
-8. If all subgoals are solved directly, mark the plan as solved and assemble the proof draft.
-9. If the plan does not fully go through, then identify the key stuck points as concretely as possible.
-10. Focus on locating the decisive failure modes of the plan after this first full attempt, not on polishing a full proof.
+8. If a proof adaptation attempt fails, identify why the migration fails. Be concrete: for example, note which hypothesis is missing, which construction does not transfer, which step breaks, which counterexample blocks the migration, or which part of the searched proof depends on structure absent in the current setting.
+9. If all subgoals are solved directly, mark the plan as solved and assemble the proof draft.
+10. If the plan does not fully go through, then identify the key stuck points as concretely as possible.
+11. Focus on locating the decisive failure modes of the plan after this first full attempt, not on polishing a full proof.
 
 ## Output Contract
 
@@ -40,6 +42,7 @@ Append one record per attempted subgoal to `proof_steps`:
 ```json
 {
   "plan_id": "...",
+  "preflight_basis": "identifier or summary of the passing preflight record",
   "attempt_type": "direct",
   "subgoal": "...",
   "attempt_summary": "...",
@@ -66,3 +69,8 @@ Update the corresponding decomposition-plan record in `subgoals` to `screening`,
 ## Failure Logging
 
 If a decomposition plan does not solve the problem directly after attempting all of its subgoals, append a `failed_paths` record that summarizes the plan-local stuck points and any important proof-migration failures.
+
+If the plan is blocked by preflight, append:
+
+- an `events` record with `event_type="direct_proving_blocked_by_preflight"`
+- a `failed_paths` record describing the blocking ambiguity or status mismatch

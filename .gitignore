@@ -1,0 +1,16 @@
+.omx/
+/.codex
+/.codex/
+
+__pycache__/
+*.py[cod]
+
+agents/generation/.venv/
+agents/verification/.venv/
+
+agents/generation/logs/
+agents/generation/memory/
+agents/generation/results/
+
+agents/verification/memory/
+agents/verification/results/

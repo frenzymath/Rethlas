@@ -12,6 +12,7 @@ Use this skill as the default retrieval workflow for mathematical background and
 Read:
 
 - the current target statement, subgoal, lemma, or claim
+- the latest preflight findings when they exist
 - the search intent:
   - `theorem`
   - `construction`
@@ -30,12 +31,16 @@ Read:
 6. Expand the definitions and concepts appearing in that theorem using the surrounding context of the paper, and check carefully whether the theorem is actually applicable to the current situation. Be explicit about terminology that may shift across contexts.
 7. Keep all downloaded PDFs and extracted text files inside `downloads/` in the current working directory.
 8. Record not only what the theorem says, but also what its proof suggests for the current problem.
-9. If the theorem search returns no useful information, switch to Codex's built-in web search.
-10. Use the built-in web search either to look for specific math results or to gather background information, terminology, standard references, and canonical constructions/examples/counterexamples.
-11. If the built-in web search reveals a useful paper, again download it, extract its text, and read the relevant extracted text before using it in reasoning.
-12. If the built-in web search reveals a useful theorem, also read its proof, expand its local definitions from the paper context, and extract the techniques that look adaptable to the current statement.
-13. Summarize the most useful findings and explain why they matter for the current proof state.
-14. If a result may later be used in a proof, preserve its full statement and source identifiers so downstream proof steps can cite it explicitly.
+9. When the search is supporting preflight or reveals a mismatch, explicitly record:
+   - terminology/model variants that could change the target statement
+   - whether the literature supports the full target, only subclasses, or only nearby variants
+   - whether the result appears conjectural, open, or still unclear
+10. If the theorem search returns no useful information, switch to Codex's built-in web search.
+11. Use the built-in web search either to look for specific math results or to gather background information, terminology, standard references, and canonical constructions/examples/counterexamples.
+12. If the built-in web search reveals a useful paper, again download it, extract its text, and read the relevant extracted text before using it in reasoning.
+13. If the built-in web search reveals a useful theorem, also read its proof, expand its local definitions from the paper context, and extract the techniques that look adaptable to the current statement.
+14. Summarize the most useful findings and explain why they matter for the current proof state.
+15. If a result may later be used in a proof, preserve its full statement and source identifiers so downstream proof steps can cite it explicitly.
 
 ## Usefulness Test
 
@@ -58,6 +63,18 @@ Append a summary record to `events`:
   "search_intent": "theorem|construction|example|counterexample|background",
   "primary_tool": "search_arxiv_theorems",
   "fallback_used": false,
+  "terminology_variants": [
+    {
+      "term": "...",
+      "variants": ["..."],
+      "why_it_matters": "..."
+    }
+  ],
+  "status_assessment": {
+    "result_status": "known_as_stated|known_only_in_subclasses|conjectural|open|unclear",
+    "scope_notes": ["..."],
+    "mismatch_risks": ["..."]
+  },
   "results_summary": ["..."],
   "useful_references": [
     {

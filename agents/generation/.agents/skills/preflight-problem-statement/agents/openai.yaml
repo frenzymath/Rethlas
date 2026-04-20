@@ -1,0 +1,7 @@
+interface:
+  display_name: "Preflight Problem Statement"
+  short_description: "Gate proof search on clarity and literature status"
+  default_prompt: "Use $preflight-problem-statement to check statement well-posedness, ambiguity, and whether the target result is actually known as stated before proof search continues."
+
+policy:
+  allow_implicit_invocation: true

@@ -14,24 +14,26 @@ Read:
 - the current set of decomposition plans
 - the direct-proving reports and key stuck points for each plan
 - the known stuck points from other plans
+- the latest relevant `big_decisions`, especially the preflight record for the active goal
 - relevant `failed_paths`, `branch_states`, and search results
 
 ## Procedure
 
-1. Confirm that all current decomposition plans have already been attempted with `$direct-proving` and that none has fully solved the problem.
-2. Spawn one sub-agent per decomposition plan.
-3. Give each sub-agent:
+1. Confirm that the active goal is covered by a preflight record with `gate_status="pass"`. If not, do not launch recursive proving for that goal; append a blocking event and stop this skill.
+2. Confirm that all current decomposition plans have already been attempted with `$direct-proving` and that none has fully solved the problem.
+3. Spawn one sub-agent per decomposition plan.
+4. Give each sub-agent:
    - the full target theorem
    - the assigned decomposition plan
    - the key stuck points for its own plan
    - the key stuck points found in the other plans
    - the instruction to follow `AGENTS.md`
-4. Tell each sub-agent to tackle the assigned plan under the instructions in `AGENTS.md`, treating that plan as its starting point rather than restarting the search from zero. If new evidence or discoveries justify it, the sub-agent may refine, extend, or locally revise the plan, but it should preserve continuity with the assigned plan instead of discarding it outright.
-5. Tell each sub-agent that it may itself spawn sub-agents recursively if that helps its assigned plan.
-6. Require each sub-agent to write progress, failures, and any successful proof development back into the shared memory using the same filename-derived `problem_id` as the MCP `problem_id`.
-7. Wait for all sub-agents to finish, then gather their reports.
-8. If any plan succeeds, assemble the proof draft from that plan.
-9. If all plans fail, hand the collected reports to `$identify-key-failures`.
+5. Tell each sub-agent to tackle the assigned plan under the instructions in `AGENTS.md`, treating that plan as its starting point rather than restarting the search from zero. If new evidence or discoveries justify it, the sub-agent may refine, extend, or locally revise the plan, but it should preserve continuity with the assigned plan instead of discarding it outright.
+6. Tell each sub-agent that it may itself spawn sub-agents recursively if that helps its assigned plan.
+7. Require each sub-agent to write progress, failures, and any successful proof development back into the shared memory using the same filename-derived `problem_id` as the MCP `problem_id`.
+8. Wait for all sub-agents to finish, then gather their reports.
+9. If any plan succeeds, assemble the proof draft from that plan.
+10. If all plans fail, hand the collected reports to `$identify-key-failures`.
 
 ## Output Contract
 
@@ -64,3 +66,5 @@ Update `branch_states` with the recursive round status and per-plan outcomes.
 ## Failure Logging
 
 If every plan fails in the recursive round, append a summary record to `failed_paths` and immediately invoke `$identify-key-failures`.
+
+If recursive proving is blocked by preflight, append an `events` record with `event_type="recursive_proving_blocked_by_preflight"`.

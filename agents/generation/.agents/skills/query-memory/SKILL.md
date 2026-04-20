@@ -1,12 +1,12 @@
 ---
 name: query-memory
-description: Retrieve previously saved immediate conclusions, toy examples, counterexamples, failed paths, or branch states from memory. Use when you want to check whether earlier conclusions, examples, counterexamples, failed paths, or brach states can bring insight to the current question, claim, subgoal, or branch decision, or when you want to test a claim against previously saved counterexamples.
+description: Retrieve previously saved immediate conclusions, toy examples, counterexamples, failed paths, branch states, big decisions, or events from memory. Use when you want to check whether earlier conclusions, examples, counterexamples, failed paths, branch states, big decisions, or events can bring insight to the current question, claim, subgoal, or branch decision, or when you want to test a claim against previously saved counterexamples.
 ---
 
 
 # Query Memory
 
-Use this skill when you want to check whether earlier conclusions, examples, counterexamples, failed paths, or brach states can bring insight to the current question, claim, subgoal, or branch decision, or when you want to test a claim against previously saved counterexamples.
+Use this skill when you want to check whether earlier conclusions, examples, counterexamples, failed paths, branch states, big decisions, or events can bring insight to the current question, claim, subgoal, or branch decision, or when you want to test a claim against previously saved counterexamples.
 
 ## Input Contract
 
@@ -20,6 +20,8 @@ Read:
   - `counterexamples`
   - `failed_paths`
   - `branch_states`
+  - `big_decisions`
+  - `events`
 
 ## Procedure
 
@@ -38,7 +40,7 @@ Append a summary record to `events`:
 {
   "event_type": "query_memory",
   "query": "...",
-  "channels": ["counterexamples", "failed_paths"],
+  "channels": ["counterexamples", "failed_paths", "big_decisions"],
   "limit_per_channel": 10,
   "results_summary": ["..."],
   "useful_hits": [

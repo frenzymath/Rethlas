@@ -14,23 +14,25 @@ Read:
 
 - target theorem statement
 - assembled proof blueprint candidate from `results/{problem_id}/blueprint.md` as pure markdown text
+- the latest relevant `big_decisions`, especially the preflight record for the active target
 - relevant prior failure reports and branch context
 
 ## Procedure
 
-1. Read the current `results/{problem_id}/blueprint.md` draft as pure text.
-2. First check that `blueprint.md` contains a full proof draft of the entire target theorem rather than a partial proof, fragment, or exploratory notes. If it does not, do not call the verifier yet.
-3. Call MCP tool `verify_proof_service` with:
+1. Confirm that the latest preflight record for the active target has `gate_status="pass"`. If not, do not call the verifier and do not treat the draft as a settled final proof.
+2. Read the current `results/{problem_id}/blueprint.md` draft as pure text.
+3. First check that `blueprint.md` contains a full proof draft of the entire target theorem rather than a partial proof, fragment, or exploratory notes. If it does not, do not call the verifier yet.
+4. Call MCP tool `verify_proof_service` with:
    - `statement`: target informal statement
    - `proof`: the raw markdown text from `blueprint.md`
-4. Read `verification_report.summary`, `critical_errors`, `gaps`, `verdict`, and `repair_hints`.
-5. Return and persist exactly what the verification service returns. Do not rename keys, add keys, or change the JSON structure.
-6. Treat the proof as failed if any of the following hold:
+5. Read `verification_report.summary`, `critical_errors`, `gaps`, `verdict`, and `repair_hints`.
+6. Return and persist exactly what the verification service returns. Do not rename keys, add keys, or change the JSON structure.
+7. Treat the proof as failed if any of the following hold:
    - `verdict` is `"wrong"`
    - `verification_report.critical_errors` is non-empty
    - `verification_report.gaps` is non-empty
-7. Only treat the proof as passed when none of the failure conditions above hold.
-8. If the proof passes, rename `results/{problem_id}/blueprint.md` to `results/{problem_id}/blueprint_verified.md`.
+8. Only treat the proof as passed when none of the failure conditions above hold.
+9. If the proof passes, rename `results/{problem_id}/blueprint.md` to `results/{problem_id}/blueprint_verified.md`.
 
 ## Output Contract
 
@@ -55,6 +57,8 @@ Append to `verification_reports`:
 Persist the verification service response exactly as returned.
 
 If verification fails, revise `blueprint.md` directly and append to `failed_paths` when a branch is invalidated.
+
+If verification is blocked by preflight, append an `events` record with `event_type="verify_proof_blocked_by_preflight"` and cite the blocking preflight issues.
 
 ## MCP Tools
 
