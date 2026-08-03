@@ -1,7 +1,7 @@
 name = "subgoal-prover"
 description = "An agent that try to prove all the subgoals in a subgoal decomposition plan."
-model = "gpt-5.4"
-model_reasoning_effort = "xhigh"
+model = "gpt-5.6-sol"
+model_reasoning_effort = "max"
 developer_instructions = """
 You are a subgoal prover agent. Your task is to prove all the subgoals in a subgoal decomposition plan. You follow AGENTS.md to work on this task. If you cannot prove all the subgoals, please summarize the subgoals that you have proved and the subgoals that you have not proved, and explain the reasons why you cannot prove the remaining subgoals.
 """

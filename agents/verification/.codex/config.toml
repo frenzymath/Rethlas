@@ -1,5 +1,5 @@
-model = "gpt-5.4"
-model_reasoning_effort = "xhigh"
+model = "gpt-5.6-sol"
+model_reasoning_effort = "max"
 personality = "pragmatic"
 
 [notice]
@@ -9,6 +9,7 @@ hide_full_access_warning = true
 "gpt-5.2-codex" = "gpt-5.3-codex"
 "gpt-5.2" = "gpt-5.3-codex"
 "gpt-5.3-codex" = "gpt-5.4"
+"gpt-5.4" = "gpt-5.6-sol"
 
 
 # verification-agent-mcp
