@@ -87,7 +87,8 @@ def build_codex_command(run_id: str, statement: str, proof: str) -> List[str]:
         "--config",
         f"model_reasoning_effort={CODEX_REASONING_EFFORT}",
         "--dangerously-bypass-approvals-and-sandbox",
-        build_prompt(run_id=run_id, statement=statement, proof=proof),
+        # Read the prompt from stdin to avoid OS argument-size limits.
+        "-",
     ]
 
 
@@ -106,6 +107,11 @@ def run_codex_verification(run_id: str, statement: str, proof: str) -> Dict[str,
 
             completed = subprocess.run(
                 cmd,
+                input=build_prompt(
+                    run_id=run_id,
+                    statement=statement,
+                    proof=proof,
+                ),
                 cwd=WORK_DIR,
                 stdout=log_handle,
                 stderr=subprocess.STDOUT,
