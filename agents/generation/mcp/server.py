@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import math
+import os
 import re
 from collections import Counter
 from datetime import datetime, timezone
@@ -205,7 +206,7 @@ def search_arxiv_theorems(
 def verify_proof_service(
     statement: str,
     proof: str,
-    endpoint: str = VERIFY_PROOF_URL,
+    endpoint: Optional[str] = None,
     timeout_seconds: int = 3600,
 ) -> Dict[str, Any]:
     if not statement.strip():
@@ -220,7 +221,11 @@ def verify_proof_service(
         "proof": proof,
     }
 
-    response = requests.post(endpoint, json=payload, timeout=timeout_seconds)
+    resolved_endpoint = (
+        endpoint if endpoint is not None else os.environ.get("VERIFY_PROOF_URL", VERIFY_PROOF_URL)
+    )
+
+    response = requests.post(resolved_endpoint, json=payload, timeout=timeout_seconds)
     response.raise_for_status()
 
     try:
@@ -236,7 +241,7 @@ def verify_proof_service(
         "verification_report": body.get("verification_report", {}),
         "verdict": body.get("verdict"),
         "repair_hints": body.get("repair_hints"),
-        "endpoint": endpoint,
+        "endpoint": resolved_endpoint,
     }
 
 
